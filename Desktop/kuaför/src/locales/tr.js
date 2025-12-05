@@ -24,7 +24,7 @@ export default {
     weekdays: 'Pazartesi - Cumartesi',
     weekend: 'Pazar',
     closed: 'Kapalı',
-    lunchBreak: 'Yemek Molası: 15:00 - 16:00'
+    lunchBreak: 'Yemek Molası: 16:00 - 17:00'
   },
   
   // Testimonials

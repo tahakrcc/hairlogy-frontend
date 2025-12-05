@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { LogOut, Calendar, Users, DollarSign, CheckCircle, XCircle, Clock, Trash2, Filter, Send, Phone, MessageSquare } from 'lucide-react'
 import { adminAPI, default as api } from '../services/api'
+import Toast from '../components/Toast'
 import './AdminPage.css'
 
 function AdminPage() {
@@ -30,6 +31,7 @@ function AdminPage() {
     end_date: '',
     reason: ''
   })
+  const [toast, setToast] = useState(null)
 
   useEffect(() => {
     checkAuth()
@@ -147,11 +149,11 @@ function AdminPage() {
       })
       
       if (error.code === 'ECONNREFUSED' || error.message?.includes('Network Error') || error.code === 'ERR_NETWORK') {
-        alert('Backend sunucusuna bağlanılamıyor.\n\nLütfen backend\'in çalıştığından emin olun:\ncd server && npm start')
+        setToast({ message: 'Backend sunucusuna bağlanılamıyor. Lütfen backend\'in çalıştığından emin olun.', type: 'error' })
       } else if (errorStatus === 401) {
-        alert('Kullanıcı adı veya şifre hatalı.\n\nKullanıcılar: yasin/admin123 veya emir/admin123')
+        setToast({ message: 'Kullanıcı adı veya şifre hatalı.', type: 'error' })
       } else {
-        alert(`Giriş hatası: ${errorMessage}\n\nStatus: ${errorStatus || 'N/A'}`)
+        setToast({ message: `Giriş hatası: ${errorMessage}`, type: 'error' })
       }
     }
   }
@@ -189,10 +191,10 @@ function AdminPage() {
       if (error.response?.status === 401) {
         handleLogout()
       } else if (error.code === 'ECONNREFUSED' || error.message?.includes('Network Error')) {
-        alert('Backend sunucusuna bağlanılamıyor. Lütfen backend\'in çalıştığından emin olun.\n\nHata: ' + error.message)
+        setToast({ message: 'Backend sunucusuna bağlanılamıyor.', type: 'error' })
       } else {
         const errorMsg = error.response?.data?.error || error.message || 'Bilinmeyen hata'
-        alert('Randevular yüklenirken hata oluştu:\n\n' + errorMsg)
+        setToast({ message: `Randevular yüklenirken hata oluştu: ${errorMsg}`, type: 'error' })
       }
     }
   }
@@ -228,16 +230,16 @@ function AdminPage() {
       setClosedDateForm({ start_date: '', end_date: '', reason: '' })
       setShowClosedDateForm(false)
       loadClosedDates()
-      alert('Kapalı tarih aralığı başarıyla eklendi')
+      setToast({ message: 'Kapalı tarih aralığı başarıyla eklendi', type: 'success' })
     } catch (error) {
       console.error('Create closed date error:', error)
       console.error('Error response:', error.response?.data)
       const errorMsg = error.response?.data?.error || error.message || 'Bilinmeyen hata'
       const overlaps = error.response?.data?.overlaps
       if (overlaps && overlaps.length > 0) {
-        alert(`Kapalı tarih eklenirken hata oluştu:\n\n${errorMsg}\n\nÇakışan tarih aralıkları:\n${overlaps.map(o => `${o.start_date} - ${o.end_date}`).join('\n')}`)
+        setToast({ message: `${errorMsg}. Çakışan tarih aralıkları: ${overlaps.map(o => `${o.start_date} - ${o.end_date}`).join(', ')}`, type: 'error' })
       } else {
-        alert(`Kapalı tarih eklenirken hata oluştu:\n\n${errorMsg}`)
+        setToast({ message: `Kapalı tarih eklenirken hata oluştu: ${errorMsg}`, type: 'error' })
       }
     }
   }
@@ -249,7 +251,7 @@ function AdminPage() {
     try {
       await adminAPI.deleteClosedDate(id)
       loadClosedDates()
-      alert('Kapalı tarih aralığı başarıyla silindi')
+      setToast({ message: 'Kapalı tarih aralığı başarıyla silindi', type: 'success' })
     } catch (error) {
       alert('Kapalı tarih silinirken hata oluştu')
     }
@@ -261,7 +263,7 @@ function AdminPage() {
       loadBookings()
       loadStats()
     } catch (error) {
-      alert('Durum güncellenirken hata oluştu')
+      setToast({ message: 'Durum güncellenirken hata oluştu', type: 'error' })
     }
   }
 
@@ -274,7 +276,7 @@ function AdminPage() {
       loadBookings()
       loadStats()
     } catch (error) {
-      alert('Randevu silinirken hata oluştu')
+      setToast({ message: 'Randevu silinirken hata oluştu', type: 'error' })
     }
   }
 
@@ -286,9 +288,9 @@ function AdminPage() {
       await adminAPI.updateBooking(id, 'cancelled')
       loadBookings()
       loadStats()
-      alert('Randevu iptal edildi')
+      setToast({ message: 'Randevu iptal edildi', type: 'success' })
     } catch (error) {
-      alert('Randevu iptal edilirken hata oluştu')
+      setToast({ message: 'Randevu iptal edilirken hata oluştu', type: 'error' })
     }
   }
 
@@ -383,7 +385,6 @@ function AdminPage() {
         <div className="container">
           <div>
             <h1>Admin Paneli</h1>
-            {currentUser && <p className="admin-user-info">Giriş: {currentUser}</p>}
           </div>
           <button onClick={handleLogout} className="logout-btn">
             <LogOut size={18} />
@@ -879,6 +880,16 @@ function AdminPage() {
           </div>
         </div>
       </main>
+
+      {/* Toast Notification */}
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+          duration={toast.type === 'error' ? 7000 : 5000}
+        />
+      )}
     </div>
   )
 }

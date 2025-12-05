@@ -302,12 +302,12 @@ function BookingPage() {
       const timesArray = Array.isArray(times) ? times.map(t => String(t).trim()) : []
       const bookedArray = Array.isArray(booked) ? booked.map(t => String(t).trim()).filter(t => t) : []
       
-      // Filter out past times for today and break time (only 16:00, 17:00 is active)
-      const breakTimeSlots = ['16:00']
+      // Filter out past times for today and break time (16:00-17:00)
+      const breakTimeSlots = ['16:00', '17:00']
       const now = new Date()
       const filteredTimes = timesArray.filter(time => {
         const normalizedTime = String(time).trim()
-        // Exclude break time slot (only 16:00)
+        // Exclude break time slots (16:00-17:00)
         if (breakTimeSlots.includes(normalizedTime)) {
           return false
         }
@@ -839,8 +839,8 @@ function BookingPage() {
                             ? bookedTimes.map(t => String(t).trim())
                             : []
                           
-                          // Check if this is break time (only 16:00, 17:00 is active)
-                          const isBreakTime = time === '16:00'
+                          // Check if this is break time (16:00-17:00)
+                          const isBreakTime = time === '16:00' || time === '17:00'
                           
                           // A time is available if it's in availableTimes array and not break time
                           const isAvailable = normalizedAvailable.includes(normalizedTime) && !isBreakTime

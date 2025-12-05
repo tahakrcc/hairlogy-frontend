@@ -210,11 +210,11 @@ function HomePage() {
               <div className="working-hours-list">
                 <div className="working-hours-item">
                   <span className="working-hours-day">{t('workingHours.weekdays')}</span>
-                  <span className="working-hours-time">09:00 - 20:00</span>
+                  <span className="working-hours-time">10:00 - 20:00</span>
                 </div>
                 <div className="working-hours-item">
                   <span className="working-hours-day">{t('workingHours.weekend')}</span>
-                  <span className="working-hours-time closed">{t('workingHours.closed')}</span>
+                  <span className="working-hours-time">10:00 - 20:00</span>
                 </div>
                 <div className="working-hours-break">
                   <span>{t('workingHours.lunchBreak')}</span>

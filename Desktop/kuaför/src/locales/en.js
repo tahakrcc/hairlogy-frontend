@@ -24,7 +24,7 @@ export default {
     weekdays: 'Monday - Saturday',
     weekend: 'Sunday',
     closed: 'Closed',
-    lunchBreak: 'Lunch Break: 15:00 - 16:00'
+    lunchBreak: 'Lunch Break: 16:00 - 17:00'
   },
   
   // Testimonials
