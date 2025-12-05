@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { LogOut, Calendar, Users, DollarSign, CheckCircle, XCircle, Clock, Trash2, Filter, Send, Phone, MessageSquare } from 'lucide-react'
-import { adminAPI } from '../services/api'
+import { adminAPI, default as api } from '../services/api'
 import './AdminPage.css'
 
 function AdminPage() {
@@ -86,15 +86,15 @@ function AdminPage() {
 
   const checkBackendConnection = async () => {
     try {
-      const response = await fetch('/api/health')
-      if (!response.ok) {
-        throw new Error('Backend health check failed')
-      }
-      const data = await response.json()
-      console.log('Backend connection OK:', data)
+      const response = await api.get('/health')
+      console.log('Backend connection OK:', response.data)
     } catch (error) {
-      console.error('Backend connection failed:', error)
-      alert('Backend sunucusuna bağlanılamıyor!\n\nLütfen backend\'in çalıştığından emin olun:\ncd server && npm start')
+      // Sadece development'ta detaylı log, production'da sessizce geç
+      if (import.meta.env.DEV) {
+        console.error('Backend connection check failed:', error.message)
+      }
+      // Alert gösterme, sadece log'la - sayfa zaten çalışacak
+      // Eğer gerçekten backend yoksa, diğer API çağrıları zaten hata verecek
     }
   }
 
