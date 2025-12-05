@@ -32,3 +32,6 @@ yarn-error.log*
 server/serviceAccountKey.json
 server/.env
 
+# Backend (artık ayrı repo'da)
+server/
+

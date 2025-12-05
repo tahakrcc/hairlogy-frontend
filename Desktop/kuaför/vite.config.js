@@ -16,5 +16,6 @@ export default defineConfig({
   optimizeDeps: {
     include: ['html2canvas', 'jspdf'],
     force: true
-  }
+  },
+  publicDir: 'public'
 })
