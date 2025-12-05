@@ -163,27 +163,106 @@
 
 @media (max-width: 768px) {
   .header {
-    padding: 12px 0;
+    padding: 14px 0;
   }
 
   .header-content {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 8px;
+    gap: 12px;
     flex-wrap: nowrap;
   }
 
   .logo {
-    gap: 8px;
-    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 0 1 auto;
     min-width: 0;
+  }
+
+  .logo-icon-wrapper {
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+  }
+
+  .logo-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .logo-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  .logo-text h1 {
+    font-size: 16px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #FFD700;
+    margin: 0;
+    line-height: 1.2;
+  }
+
+  .logo-premium {
+    font-size: 10px;
+    margin-left: 0;
+    color: #FFD700;
+    opacity: 0.9;
+    line-height: 1;
+  }
+  
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+  
+  .language-selector {
+    gap: 3px;
+    padding: 3px;
+    border-radius: 8px;
+  }
+  
+  .lang-btn {
+    padding: 8px 12px;
+    font-size: 12px;
+    min-width: 40px;
+    font-weight: 600;
+  }
+  
+  .book-appointment-btn {
+    padding: 10px 16px;
+    font-size: 13px;
+    white-space: nowrap;
+    font-weight: 700;
+    border-radius: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    padding: 12px 0;
+  }
+
+  .header-content {
+    gap: 8px;
+  }
+
+  .logo {
+    gap: 8px;
   }
 
   .logo-icon-wrapper {
     width: 32px;
     height: 32px;
-    flex-shrink: 0;
   }
 
   .logo-icon {
@@ -192,49 +271,26 @@
   }
 
   .logo-text h1 {
-    font-size: 18px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    color: #FFD700;
+    font-size: 15px;
   }
 
   .logo-premium {
     font-size: 9px;
-    margin-left: 4px;
   }
   
   .header-actions {
-    display: flex;
-    align-items: center;
     gap: 8px;
-    flex-shrink: 0;
-  }
-  
-  .language-selector {
-    gap: 2px;
-    padding: 2px;
   }
   
   .lang-btn {
-    padding: 8px 14px;
-    font-size: 13px;
-    min-width: 44px;
+    padding: 7px 10px;
+    font-size: 11px;
+    min-width: 36px;
   }
   
   .book-appointment-btn {
-    padding: 10px 18px;
-    font-size: 14px;
-    white-space: nowrap;
-    height: 20px;
-  }
-  
-  .logo-text h1 {
-    font-size: 18px;
-  }
-  
-  .logo-premium {
-    font-size: 11px;
+    padding: 9px 14px;
+    font-size: 12px;
   }
 }
 
