@@ -307,7 +307,7 @@ function BookingPage() {
       const now = new Date()
       const filteredTimes = timesArray.filter(time => {
         const normalizedTime = String(time).trim()
-        // Exclude break time slots (16:00-17:00)
+        // Exclude break time slots (16:00-17:00) - both are unavailable
         if (breakTimeSlots.includes(normalizedTime)) {
           return false
         }
@@ -839,14 +839,15 @@ function BookingPage() {
                             ? bookedTimes.map(t => String(t).trim())
                             : []
                           
-                          // Check if this is break time (16:00-17:00)
-                          const isBreakTime = time === '16:00' || time === '17:00'
+                          // Check if this is break time (only 16:00 shows "Yemek Molası", 17:00 is just disabled)
+                          const isBreakTime = time === '16:00'
+                          const isBreakTimeSlot = time === '16:00' || time === '17:00'
                           
-                          // A time is available if it's in availableTimes array and not break time
-                          const isAvailable = normalizedAvailable.includes(normalizedTime) && !isBreakTime
-                          // A time is booked if it's explicitly in bookedTimes array OR not in availableTimes OR is break time
+                          // A time is available if it's in availableTimes array and not break time slot
+                          const isAvailable = normalizedAvailable.includes(normalizedTime) && !isBreakTimeSlot
+                          // A time is booked if it's explicitly in bookedTimes array OR not in availableTimes OR is break time slot
                           // This ensures that if a time is not available, it's considered booked
-                          const isBooked = normalizedBooked.includes(normalizedTime) || (!isAvailable && !isBreakTime) || isBreakTime
+                          const isBooked = normalizedBooked.includes(normalizedTime) || (!isAvailable && !isBreakTimeSlot) || isBreakTimeSlot
                           const isSelected = selectedTime === time
                           
                           // Check if time is in the past for today
@@ -858,14 +859,14 @@ function BookingPage() {
                             isPastTime = isBefore(slotDateTime, now)
                           }
 
-                          // A time is disabled if it's booked, past, not available, or break time
-                          // Priority: break time > booked > past > not available
-                          const isDisabled = isBreakTime || isBooked || isPastTime || !isAvailable
+                          // A time is disabled if it's booked, past, not available, or break time slot
+                          // Priority: break time slot > booked > past > not available
+                          const isDisabled = isBreakTimeSlot || isBooked || isPastTime || !isAvailable
                           
                           return (
                             <button
                               key={index}
-                              className={`time-slot ${isSelected ? 'selected' : ''} ${isBooked ? 'booked' : ''} ${isPastTime ? 'past' : ''} ${isBreakTime ? 'break-time' : ''} ${isAvailable && !isPastTime && !isBooked && !isBreakTime ? 'available' : ''} ${isDisabled ? 'disabled-slot' : ''}`}
+                              className={`time-slot ${isSelected ? 'selected' : ''} ${isBooked ? 'booked' : ''} ${isPastTime ? 'past' : ''} ${isBreakTime ? 'break-time' : ''} ${isBreakTimeSlot && !isBreakTime ? 'break-time-slot' : ''} ${isAvailable && !isPastTime && !isBooked && !isBreakTimeSlot ? 'available' : ''} ${isDisabled ? 'disabled-slot' : ''}`}
                               onClick={(e) => {
                                 e.preventDefault()
                                 e.stopPropagation()
@@ -873,7 +874,7 @@ function BookingPage() {
                                   handleTimeSelect(time)
                                 } else {
                                   // Show feedback when trying to click disabled slot
-                                  if (isBreakTime) {
+                                  if (isBreakTimeSlot) {
                                     setToast({ message: 'Bu saat yemek molası', type: 'info' })
                                   } else if (isBooked) {
                                     setToast({ message: 'Bu saat zaten dolu', type: 'warning' })
@@ -884,10 +885,11 @@ function BookingPage() {
                               }}
                               disabled={isDisabled}
                               style={isDisabled ? { pointerEvents: 'none' } : {}}
-                              title={isBreakTime ? 'Yemek Molası' : isBooked ? t('booking.step1.booked') : isPastTime ? t('booking.step1.past') : !isAvailable ? 'Bu saat müsait değil' : ''}
+                              title={isBreakTimeSlot ? (isBreakTime ? 'Yemek Molası' : 'Yemek molası saati') : isBooked ? t('booking.step1.booked') : isPastTime ? t('booking.step1.past') : !isAvailable ? 'Bu saat müsait değil' : ''}
                             >
                               <span className="time-slot-time">{time}</span>
                               {isBreakTime && <span className="time-slot-label">Yemek Molası</span>}
+                              {isBreakTimeSlot && !isBreakTime && <span className="time-slot-label">Dolu</span>}
                               {isBooked && <span className="booked-label">{t('booking.step1.booked')}</span>}
                               {isPastTime && <span className="past-label">{t('booking.step1.past')}</span>}
                               {!isAvailable && !isBooked && !isPastTime && <span className="booked-label">Dolu</span>}
